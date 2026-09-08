@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PetScan 🐾</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f4f7fb;margin:0;padding:20px;color:#243447}
+.card{max-width:540px;margin:auto;background:white;padding:24px;border-radius:22px;box-shadow:0 8px 25px #0001}
+h1{text-align:center;margin-bottom:4px}.sub{text-align:center;color:#667085}
+.photo{border:2px dashed #b9c2d0;border-radius:16px;padding:18px;text-align:center;margin:18px 0}
+#preview{max-width:100%;max-height:260px;border-radius:14px;display:none;margin:12px auto}
+input,select,textarea{width:100%;box-sizing:border-box;padding:11px;margin-top:6px;border:1px solid #ccd3dc;border-radius:10px;font-size:16px}
+label{display:block;margin-top:14px;font-weight:bold}
+button{width:100%;margin-top:18px;padding:13px;border:0;border-radius:12px;background:#5b67f1;color:white;font-size:17px;font-weight:bold}
+.secondary{background:#7b8794}
+#resultado{display:none;margin-top:22px;padding:18px;background:#f1f4ff;border-radius:14px}
+.note{font-size:13px;color:#667085}
+
+.photo-buttons {
+  display: grid;
+  gap: 12px;
+  margin: 16px 0;
+}
+.photo-btn {
+  width: 100%;
+  padding: 18px 16px;
+  border: 0;
+  border-radius: 14px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  background: #f2f2f2;
+  color: #222;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+.photo-btn:active { transform: scale(.98); }
+</style>
+</head>
+<body>
+<div class="card">
+<h1>🐾 PetScan</h1>
+<p class="sub">Toma una foto de una mascota y consulta su ficha</p>
+
+<div class="photo">
+  <strong>📸 Foto de la mascota</strong>
+  <input id="foto" type="file" accept="image/*" capture="environment" onchange="mostrarFoto(event)">
+  <img id="preview" alt="Vista previa de la mascota">
+  <p class="note">Puedes tomar una foto con la cámara o elegir una de tu galería.</p>
+</div>
+
+<button onclick="analizar()">🔎 Analizar mascota</button>
+
+<div id="formulario" style="display:none">
+<label>Nombre</label><input id="nombre" placeholder="Ej. Max">
+<label>Tipo</label><select id="tipo"><option>Perro</option><option>Gato</option></select>
+<label>Edad</label><input id="edad" type="number" min="0" placeholder="Ej. 3">
+<label>Raza</label><input id="raza" placeholder="Ej. Labrador">
+<label>Color</label><input id="color" placeholder="Ej. Café">
+<label>Peso (kg)</label><input id="peso" type="number" min="0" step="0.1" placeholder="Ej. 12.5">
+<label>Datos importantes</label><textarea id="datos" rows="4" placeholder="Alergias, vacunas, cuidados, etc."></textarea>
+<button onclick="mostrarFicha()">Guardar ficha</button>
+</div>
+
+<div id="resultado"></div>
+</div>
+
+<script>
+function mostrarFoto(e){
+ const file=e.target.files[0]; if(!file)return;
+ const img=document.getElementById('preview');
+ img.src=URL.createObjectURL(file); img.style.display='block';
+}
+function analizar(){
+ const file=document.getElementById('foto').files[0];
+ if(!file){alert('Primero toma o selecciona una foto.');return;}
+ document.getElementById('formulario').style.display='block';
+ alert('Foto recibida. En esta versión puedes completar la ficha. Para que PetScan reconozca automáticamente la raza, edad aproximada u otros datos mediante IA, habría que conectar un servicio de inteligencia artificial.');
+}
+function mostrarFicha(){
+ const g=id=>document.getElementById(id).value||'No indicado';
+ const r=document.getElementById('resultado');
+ r.style.display='block';
+ r.innerHTML=`<h2>🐾 ${g('nombre')}</h2>
+ <p><b>Tipo:</b> ${g('tipo')}</p><p><b>Edad:</b> ${g('edad')} años</p>
+ <p><b>Raza:</b> ${g('raza')}</p><p><b>Color:</b> ${g('color')}</p>
+ <p><b>Peso:</b> ${g('peso')} kg</p><p><b>Datos importantes:</b> ${g('datos')}</p>`;
+}
+</script>
+</body>
+</html>
